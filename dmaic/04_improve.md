@@ -1,4 +1,4 @@
-# DMAIC — Improve Phase
+# DMAIC: Improve Phase
 
 ## Improvement actions
 
@@ -13,9 +13,9 @@
 These actions mirror the real intervention applied in a comparable DMAIC
 cycle at Vivo, which achieved a documented **13% MTTR reduction**. That
 target is used here as the basis for the simulated "after" dataset
-(`notebooks/03_improve_control.ipynb`), applying a -13% shift in mean
-resolution time plus a proportional reduction in variability — the
-expected statistical effect of standardizing a previously inconsistent
+(`notebooks/03_improve_control.ipynb`): a -13% shift in mean
+resolution time plus a proportional reduction in variability, which is
+the expected statistical effect of standardizing a previously inconsistent
 process.
 
 ## Result (simulated pilot)
@@ -28,8 +28,8 @@ process.
 | SLA compliance | 43.2% | 50.3% | +7.1 pp |
 
 **Honest reading of the result:** the improvement is real and
-statistically meaningful, but a single DMAIC cycle does not make the
-process fully capable (Cpk still below 1.0). This is the expected,
-realistic outcome of a first improvement cycle — it justifies a second
-cycle targeting the ISP escalation SLA specifically, since that is the
-largest remaining lever.
+statistically meaningful, but a single DMAIC cycle doesn't make the
+process fully capable (Cpk is still below 1.0). That's the expected,
+realistic outcome of a first improvement cycle, and it's exactly why a
+second cycle targeting the ISP escalation SLA specifically makes sense:
+it's the largest remaining lever.

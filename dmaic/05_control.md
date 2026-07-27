@@ -1,4 +1,4 @@
-# DMAIC — Control Phase
+# DMAIC: Control Phase
 
 ## Control plan
 
@@ -11,8 +11,8 @@
 ## Alert rule
 
 Flag for investigation if **2 or more consecutive points** exceed the
-UCL on the Network control chart — this indicates a special-cause event
-(e.g., ISP outage, staffing gap) rather than normal process variation.
+UCL on the Network control chart. That pattern points to a special-cause
+event (an ISP outage, a staffing gap) rather than normal process variation.
 
 ## Standardization
 
@@ -24,6 +24,6 @@ chart baseline should be recalculated after any process change.
 ## Next cycle
 
 The ISP escalation SLA was identified in Analyze as a contributing factor
-but not fully resolved in this cycle (external dependency, longer
-negotiation timeline). Recommended as the primary target for the next
-DMAIC cycle.
+but wasn't fully resolved in this cycle, since it depends on an external
+party and a longer negotiation timeline. It's the recommended primary
+target for the next DMAIC cycle.
