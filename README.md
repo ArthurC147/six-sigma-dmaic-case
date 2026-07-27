@@ -2,6 +2,7 @@
 
 ![Six Sigma](https://img.shields.io/badge/Six%20Sigma-FFCC00?style=flat-square&logoColor=black)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)
 
 A full DMAIC cycle (Define, Measure, Analyze, Improve, Control) run on IT helpdesk data, built the same way the methodology behind my Lean Six Sigma Yellow Belt actually works, not just the vocabulary.
 
@@ -43,6 +44,24 @@ jupyter notebook
 ```
 
 `01_measure.ipynb` → `02_analyze.ipynb` → `03_improve_control.ipynb`, in that order. The dataset (`data/raw/helpdesk_tickets.csv`) is small and synthetic, so it ships with the repo, nothing to download separately.
+
+
+![Control chart before and after improvement](docs/screenshots/control_chart_before_after.png)
+*Network ticket resolution time, before and after the simulated improvement, from `03_improve_control.ipynb`.*
+
+---
+
+## Credits
+
+Dataset is synthetic, generated for this project, no external source to credit.
+
+## Contributing
+
+This is a personal portfolio project, so it's not actively looking for contributions, but if you spot a bug or have a suggestion, feel free to open an issue.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
 
 ---
 
