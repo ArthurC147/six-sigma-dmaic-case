@@ -2,133 +2,48 @@
 
 ![Six Sigma](https://img.shields.io/badge/Six%20Sigma-FFCC00?style=flat-square&logoColor=black)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat-square&logo=pandas&logoColor=white)
-![Status](https://img.shields.io/badge/Status-Active-brightgreen?style=flat-square)
 
-> Full DMAIC cycle applied to an IT helpdesk ticket resolution process — control charts, Pareto analysis, process capability (Cpk), and a documented improvement plan.
+A full DMAIC cycle (Define, Measure, Analyze, Improve, Control) run on IT helpdesk data, built the same way the methodology behind my Lean Six Sigma Yellow Belt actually works, not just the vocabulary.
 
----
+## Read the phases directly
 
-## Business context
+Each phase has its own short write-up in `dmaic/`, which is closer to how a real Six Sigma project gets documented than cramming everything into one README:
 
-A helpdesk process with no statistical monitoring cannot answer basic
-questions: which category of problem drives most of the delay? Is the
-process even capable of meeting its SLA? This project applies the
-5-phase DMAIC methodology (Define, Measure, Analyze, Improve, Control) —
-the same framework behind the Lean Six Sigma Yellow Belt certification —
-to answer those questions with data, not assumption.
+- [`01_define.md`](dmaic/01_define.md), the charter: what's broken, what "fixed" means, and where the line is drawn
+- [`02_measure.md`](dmaic/02_measure.md), the baseline, and the control chart method used to get it
+- [`03_analyze.md`](dmaic/03_analyze.md), Pareto and the actual root causes
+- [`04_improve.md`](dmaic/04_improve.md), what changed and what it did to the numbers
+- [`05_control.md`](dmaic/05_control.md), how it stays fixed instead of drifting back
 
-This case study mirrors a real DMAIC project applied to a technical
-support ticket workflow, which achieved a documented **13% MTTR
-reduction** (Vivo Academy, Lean Six Sigma Yellow Belt). Public data is
-used here since the original dataset is confidential; the same
-statistical methodology is applied end-to-end.
+## The one thing worth understanding before the rest makes sense
 
----
+This uses an Individuals (I-MR) control chart, not a plain mean plus or minus three standard deviations. The difference matters: a normal standard deviation gets pulled around by whatever outliers already happened, so it ends up measuring the problem instead of the baseline. An I-MR chart estimates variation from the moving range between consecutive points instead, which holds up better even when the process already has a few bad days in it.
 
-## Problem → Solution → Result
-
-| | |
-|---|---|
-| **Problem** | Network-category tickets drive 59% of total process time, with a baseline Cpk of -0.14 against a 24h SLA — the process mean itself exceeds the target |
-| **Solution** | Full DMAIC cycle: I-MR control chart (Measure), Pareto + stratification (Analyze), standardized triage + documented improvement action (Improve), monitoring plan (Control) |
-| **Result** | Simulated pilot shows -12.6% MTTR reduction and Cpk improving from -0.14 to -0.07 — real, measurable progress, with a second cycle recommended to reach full capability |
-
----
-
-## DMAIC documentation
-
-| Phase | File |
-|---|---|
-| Define | [`dmaic/01_define.md`](dmaic/01_define.md) — project charter, goal, scope |
-| Measure | [`dmaic/02_measure.md`](dmaic/02_measure.md) — baseline data and control chart method |
-| Analyze | [`dmaic/03_analyze.md`](dmaic/03_analyze.md) — Pareto, stratification, root cause |
-| Improve | [`dmaic/04_improve.md`](dmaic/04_improve.md) — actions taken and simulated result |
-| Control | [`dmaic/05_control.md`](dmaic/05_control.md) — monitoring plan and next cycle |
-
----
-
-## Dataset
-
-Simulated IT helpdesk ticket data (2,400 tickets, 6 categories), designed
-to reflect a realistic Pareto distribution — a small number of categories
-driving most of the total resolution time, which is the typical pattern
-in real support operations.
-
-```
-data/
-├── raw/
-│   └── helpdesk_tickets.csv
-└── processed/
-    └── dmaic_kpi_summary.csv
+```python
+sigma = mean(abs(x[i] - x[i-1])) / 1.128
 ```
 
----
+That `1.128` isn't arbitrary, it's a standard statistical constant (d2) for comparing two points at a time, the same one used in real SPC software.
 
-## Statistical methods used
+## What the baseline looked like
 
-| Method | Where | Why |
-|---|---|---|
-| I-MR control chart | Measure, Improve | Correct SPC method for one-at-a-time (non-subgrouped) continuous data |
-| Pareto by total impact | Analyze | Prioritizes by total time consumed, not just ticket count |
-| Boxplot stratification | Analyze | Tests whether priority level explains the delay (it doesn't) |
-| Process capability (Cpk, one-sided) | Measure, Improve | Quantifies whether the process can meet the SLA, not just whether the average looks fine |
+Network tickets carried both the highest volume and the longest resolution time of any category, and alone accounted for 59% of all support hours logged, well past what a normal Pareto split usually looks like. Cpk against a 24 hour SLA came out negative, which is a specific and fairly bad signal: it means the average itself is already past the target, not just the slow outliers.
 
----
+## What changed, and what didn't
 
-## Project structure
+The improvement plan (standardized triage checklist, better first-line documentation, a defined escalation SLA with the ISP) was modeled with a 13% reduction in mean resolution time, matching a real result from a similar DMAIC project I worked on. Cpk moved from -0.14 to -0.07. Better, clearly, but still not a capable process by the usual bar (Cpk above 1.0).
 
-```
-six-sigma-dmaic-case/
-├── data/{raw,processed}/
-├── notebooks/
-│   ├── 01_measure.ipynb
-│   ├── 02_analyze.ipynb
-│   └── 03_improve_control.ipynb
-├── dmaic/
-│   ├── 01_define.md ... 05_control.md
-├── docs/screenshots/
-├── requirements.txt
-└── README.md
-```
+That's actually the honest outcome of most first DMAIC cycles. Claiming the process got fixed in one pass would be the less credible answer. The real next step, tightening the ISP escalation SLA specifically, is written up in the control phase doc rather than left for someone to guess at later.
 
----
-
-## How to run
+## Running it
 
 ```bash
-git clone https://github.com/ArthurC147/six-sigma-dmaic-case.git
-cd six-sigma-dmaic-case
 pip install -r requirements.txt
 jupyter notebook
-# Run in order: 01_measure -> 02_analyze -> 03_improve_control
 ```
 
-No external dataset download needed — `helpdesk_tickets.csv` is included
-directly (small, synthetic, no licensing restriction).
+`01_measure.ipynb` → `02_analyze.ipynb` → `03_improve_control.ipynb`, in that order. The dataset (`data/raw/helpdesk_tickets.csv`) is small and synthetic, so it ships with the repo, nothing to download separately.
 
 ---
 
-## What I learned
-
-- Prioritizing a Pareto by total impact (sum of hours) instead of raw
-  count changes the answer — the highest-volume category and the
-  highest-impact category are not always the same
-- An Individuals (I-MR) chart, not a naive mean ± 3×std, is the correct
-  way to estimate process variation for ticket-level data — using
-  moving range avoids inflating sigma from single special-cause events
-- A negative Cpk means the process average itself misses the target —
-  a different (and more urgent) problem than a capable process with
-  occasional outliers
-- One DMAIC cycle rarely makes a broken process fully capable — showing
-  a real, partial improvement and naming the next target is more honest
-  and more useful than claiming the process is "fixed"
-
----
-
-## Author
-
-**Arthur Cardoso** — Industrial Engineering @ UFPR · Business & Customer Success Intern @ Telefônica Vivo · Lean Six Sigma Yellow Belt
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/arthur-cardoso-b3b1ba1ab)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/ArthurC147)
+Arthur Cardoso · [LinkedIn](https://linkedin.com/in/arthur-cardoso-b3b1ba1ab) · [GitHub](https://github.com/ArthurC147)
